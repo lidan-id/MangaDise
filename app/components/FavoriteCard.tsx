@@ -4,31 +4,34 @@ import {
   ImageSourcePropType,
   Image,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import React from "react";
-interface FavoriteCardProps {
-  title: string;
-  author: string;
-  ch: number;
-  image: ImageSourcePropType;
-}
-const FavoriteCard = ({ item }: { item: FavoriteCardProps }) => {
+import { DataProps } from "@/helper/interface";
+import { useRouter } from "expo-router";
+
+const FavoriteCard = ({ item }: { item: DataProps }) => {
+  const router = useRouter();
+  const moveToDetails = () => {
+    router.push({ pathname: "/Details/[id]", params: { id: item.id } });
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={item.image}></Image>
+    <Pressable style={{ width: "50%" }} onPress={moveToDetails}>
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image style={styles.image} source={item.image}></Image>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>{item.title}</Text>
+        </View>
       </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>{item.title}</Text>
-      </View>
-    </View>
+    </Pressable>
   );
 };
 
 export default FavoriteCard;
 const styles = StyleSheet.create({
   container: {
-    width: "50%",
     paddingHorizontal: 15,
     paddingVertical: 5,
   },

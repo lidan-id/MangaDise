@@ -14,38 +14,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import CategoryCard from "./components/CategoryCard";
 import RecentCard from "./components/RecentCard";
-const data = [
-  {
-    title: "Beserk",
-    author: "Miura, Kentarou",
-    ch: 388,
-    image: require("../assets/berserk.png"),
-  },
-  {
-    title: "Chainsaw Man",
-    author: "Yuto Suzuki",
-    ch: 104,
-    image: require("../assets/chainsaw.png"),
-  },
-  {
-    title: "Demon Slayer",
-    author: "Koyoharu Gotouge",
-    ch: 205,
-    image: require("../assets/demon.png"),
-  },
-  {
-    title: "SPY x FAMILY",
-    author: "Tatsuya Endo",
-    ch: 201,
-    image: require("../assets/spy.png"),
-  },
-  {
-    title: "Hunter x Hunter",
-    author: "Yoshihiro Togashi",
-    ch: 678,
-    image: require("../assets/hunter.png"),
-  },
-];
+import { data } from "@/helper/data";
+
 const Search = () => {
   const router = useRouter();
   const moveToPreviousPage = () => {

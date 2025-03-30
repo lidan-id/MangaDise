@@ -28,116 +28,128 @@ const Details = () => {
   const moveToPreviousPage = () => {
     router.back();
   };
-
+  const [readMore, setReadMore] = useState(false);
+  const toggleReadMore = () => {
+    setReadMore(!readMore);
+  };
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <Stack.Screen
-          options={{
-            title: currentData?.title,
-            headerTitleStyle: { fontWeight: "bold" },
-            headerShown: true,
-            headerTintColor: "white",
-            headerStyle: { backgroundColor: secondary },
-            header: () => (
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingVertical: 20,
-                  paddingHorizontal: 10,
-                  backgroundColor: secondary,
-                }}
-              >
-                <Ionicons
-                  onPress={moveToPreviousPage}
-                  name="chevron-back-circle-outline"
-                  color={"white"}
-                  size={40}
-                />
-                <Text
-                  style={{
-                    color: "white",
-                    fontWeight: "bold",
-                    marginLeft: 15,
-                    fontSize: 22,
-                  }}
-                >
-                  {currentData?.title}
-                </Text>
-              </View>
-            ),
-            headerBackVisible: false,
-          }}
-        ></Stack.Screen>
-        <ImageBackground
-          source={currentData?.image}
-          style={styles.imageBackground}
-        >
-          <LinearGradient
-            locations={[0.4, 1]}
-            colors={["rgba(39, 40, 49, 0.7)", primary]}
-            style={{
-              height: "100%",
-              width: "150%",
-              zIndex: 1,
-              position: "absolute",
-            }}
-          ></LinearGradient>
-        </ImageBackground>
-        <View style={styles.imagenTitle}>
-          <Image style={styles.image} source={currentData?.image}></Image>
-          <View>
-            <Text style={styles.title}>{currentData?.title}</Text>
-            <View style={styles.addFav}>
-              <Ionicons name="heart-outline" color={"red"}></Ionicons>
+    <>
+      <Stack.Screen
+        options={{
+          title: currentData?.title,
+          headerTitleStyle: { fontWeight: "bold" },
+          headerShown: true,
+          headerTintColor: "white",
+          headerStyle: { backgroundColor: secondary },
+          header: () => (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 20,
+                paddingHorizontal: 10,
+                backgroundColor: secondary,
+              }}
+            >
+              <Ionicons
+                onPress={moveToPreviousPage}
+                name="chevron-back-circle-outline"
+                color={"white"}
+                size={40}
+              />
               <Text
                 style={{
                   color: "white",
-                  fontSize: 10,
                   fontWeight: "bold",
-                  marginLeft: 5,
+                  marginLeft: 15,
+                  fontSize: 22,
                 }}
               >
-                Add To Favorite
+                {currentData?.title}
               </Text>
             </View>
-          </View>
-        </View>
-        <View style={styles.synopsis}>
-          <Text numberOfLines={4} style={{ color: "white", lineHeight: 18 }}>
-            {currentData?.synopsis}
-          </Text>
-          <Pressable style={{ marginTop: 5 }}>
-            <Text
+          ),
+          headerBackVisible: false,
+        }}
+      ></Stack.Screen>
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          <ImageBackground
+            source={currentData?.image}
+            style={styles.imageBackground}
+          >
+            <LinearGradient
+              locations={[0.4, 1]}
+              colors={["rgba(39, 40, 49, 0.7)", primary]}
               style={{
-                color: "white",
-                textDecorationLine: "underline",
-                fontSize: 13,
+                height: "100%",
+                width: "150%",
+                zIndex: 1,
+                position: "absolute",
               }}
+            ></LinearGradient>
+          </ImageBackground>
+          <View style={styles.imagenTitle}>
+            <Image style={styles.image} source={currentData?.image}></Image>
+            <View>
+              <Text style={styles.title}>{currentData?.title}</Text>
+              <View style={styles.addFav}>
+                <Ionicons name="heart-outline" color={"red"}></Ionicons>
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 10,
+                    fontWeight: "bold",
+                    marginLeft: 5,
+                  }}
+                >
+                  Add To Favorite
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.synopsis}>
+            <Text
+              numberOfLines={readMore ? 0 : 4}
+              style={{ color: "white", lineHeight: 18 }}
             >
-              Read More
+              {currentData?.synopsis}
             </Text>
-          </Pressable>
-        </View>
-        <View style={styles.category}>
-          {currentData?.genre.map((e) => (
-            <CategoryCard text={e}></CategoryCard>
-          ))}
-        </View>
-        <View>
-          {Array.from({ length: currentData?.ch || 0 }).map((e, index) => (
-            <ChapterCard key={`chapter-${index}`} />
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+            <Pressable style={{ marginTop: 5 }} onPress={toggleReadMore}>
+              <Text
+                style={{
+                  color: "white",
+                  textDecorationLine: "underline",
+                  fontSize: 13,
+                }}
+              >
+                {readMore ? "Read Less" : "Read More"}
+              </Text>
+            </Pressable>
+          </View>
+          <View style={styles.category}>
+            {currentData?.genre.map((e, index) => (
+              <CategoryCard key={index} text={e}></CategoryCard>
+            ))}
+          </View>
+          <View>
+            {Array.from({ length: currentData?.ch || 0 }).map((e, index) => (
+              <ChapterCard
+                key={`chapter-${index}`}
+                chapter={Number(currentData?.ch) - index}
+                id={currentData?.id || 0}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 
 export default Details;
 const styles = StyleSheet.create({
-  container: { height: "100%", backgroundColor: primary },
+  container: { backgroundColor: primary, paddingBottom: 100 },
   imageBackground: {
     width: "100%",
     height: 250,
@@ -158,6 +170,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "white",
+    alignSelf: "flex-start",
     borderRadius: 8,
     padding: 10,
   },

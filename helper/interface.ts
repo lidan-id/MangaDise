@@ -9,6 +9,7 @@ interface DataProps {
   synopsis: string;
   rate: number;
   genre: string[];
+  read: ImageSourcePropType[];
 }
 interface TopCardProps {
   top: number;

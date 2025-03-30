@@ -5,64 +5,65 @@ import {
   Image,
   StyleSheet,
   LayoutChangeEvent,
+  Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useRouter } from "expo-router";
+import { DataProps } from "@/helper/interface";
 
-interface GenreCardProps {
-  title: string;
-  author: string;
-  ch: number;
-  image: ImageSourcePropType;
-  synopsis: string;
-  rate: number;
-}
-const GenreCard = ({ item }: { item: GenreCardProps }) => {
+const GenreCard = ({ item }: { item: DataProps }) => {
+  const router = useRouter();
+  const moveToDetails = () => {
+    router.push({ pathname: "/Details/[id]", params: { id: item.id } });
+  };
   return (
-    <View style={styles.container}>
-      <Image style={styles.image} source={item.image}></Image>
-      <View style={styles.right}>
-        <Text style={styles.title}>{item.title}</Text>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingBottom: 3,
-          }}
-        >
-          <Ionicons name="star" color={"red"}></Ionicons>
-          <Text style={styles.rateFav}>{item.rate}</Text>
+    <Pressable onPress={moveToDetails}>
+      <View style={styles.container}>
+        <Image style={styles.image} source={item.image}></Image>
+        <View style={styles.right}>
+          <Text style={styles.title}>{item.title}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingBottom: 3,
+            }}
+          >
+            <Ionicons name="star" color={"red"}></Ionicons>
+            <Text style={styles.rateFav}>{item.rate}</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingBottom: 3,
+            }}
+          >
+            <Ionicons
+              style={{ alignSelf: "center" }}
+              name="heart"
+              color={"red"}
+            ></Ionicons>
+            <Text style={styles.rateFav}>Add to Favorite</Text>
+          </View>
+          <Text style={styles.chapter}>CHAPTER: {item.ch}</Text>
+          <View
+            style={{
+              borderBottomWidth: 1,
+              borderColor: "white",
+              alignSelf: "flex-start",
+              paddingRight: 8,
+            }}
+          >
+            <Text style={styles.synopsis}>Synopsis</Text>
+          </View>
+          <Text style={styles.synopsisText} numberOfLines={4}>
+            {item.synopsis}
+          </Text>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingBottom: 3,
-          }}
-        >
-          <Ionicons
-            style={{ alignSelf: "center" }}
-            name="heart"
-            color={"red"}
-          ></Ionicons>
-          <Text style={styles.rateFav}>Add to Favorite</Text>
-        </View>
-        <Text style={styles.chapter}>CHAPTER: {item.ch}</Text>
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderColor: "white",
-            alignSelf: "flex-start",
-            paddingRight: 8,
-          }}
-        >
-          <Text style={styles.synopsis}>Synopsis</Text>
-        </View>
-        <Text style={styles.synopsisText} numberOfLines={4}>
-          {item.synopsis}
-        </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

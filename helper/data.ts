@@ -39,9 +39,10 @@ const data = [
         image: require("../assets/berserk.png"),
         synopsis:'After a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya memberAfter a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya member',
         rate:8.32,
-        genre:['Action','Adventure','Fantasy']
-    },
-    {
+        genre:['Action','Adventure','Fantasy'],
+        read: [require("../assets/read1.png"),require("../assets/read2.png"),require("../assets/read3.png"),require("../assets/read4.png"),require("../assets/read5.png"),require("../assets/read6.png"),require("../assets/read7.png")],
+      },
+      {
         id:2,
         title: "Chainsaw Man",
         author: "Yuto Suzuki",
@@ -49,9 +50,10 @@ const data = [
         image: require("../assets/chainsaw.png"),
         synopsis:'After a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya memberAfter a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya member',
         rate:8.32,
-        genre:['Action', 'Adventure','Fantasy','Psychological']
-    },
-    {
+        genre:['Action', 'Adventure','Fantasy','Psychological'],
+        read: [require("../assets/read1.png"),require("../assets/read2.png"),require("../assets/read3.png"),require("../assets/read4.png"),require("../assets/read5.png"),require("../assets/read6.png"),require("../assets/read7.png")],
+      },
+      {
         id:3,
         title: "Demon Slayer",
         author: "Koyoharu Gotouge",
@@ -59,9 +61,10 @@ const data = [
         image: require("../assets/demon.png"),
         synopsis:'After a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya memberAfter a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya member',
         rate:8.32,
-        genre:['Action', 'Adventure','Fantasy','Slice of Life','Romance','Comedy']
-    },
-    {
+        genre:['Action', 'Adventure','Fantasy','Slice of Life','Romance','Comedy'],
+        read: [require("../assets/read1.png"),require("../assets/read2.png"),require("../assets/read3.png"),require("../assets/read4.png"),require("../assets/read5.png"),require("../assets/read6.png"),require("../assets/read7.png")],
+      },
+      {
         id:4,
         title: "SPY x FAMILY",
         author: "Tatsuya Endo",
@@ -69,9 +72,10 @@ const data = [
         image: require("../assets/spy.png"),
         synopsis:'After a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya memberAfter a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya member',
         rate:8.32,
-        genre:['Action', 'Adventure','Comedy','Slice of Life','Romance','Drama']
-    },
-    {
+        genre:['Action', 'Adventure','Comedy','Slice of Life','Romance','Drama'],
+        read: [require("../assets/read1.png"),require("../assets/read2.png"),require("../assets/read3.png"),require("../assets/read4.png"),require("../assets/read5.png"),require("../assets/read6.png"),require("../assets/read7.png")],
+      },
+      {
         id:5,
         title: "Hunter x Hunter",
         author: "Yoshihiro Togashi",
@@ -79,7 +83,8 @@ const data = [
         image: require("../assets/hunter.png"),
         synopsis:'After a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya memberAfter a one-year hiatus, Shinpachi Shimura returns to Edo, only to stumble upon a shocking surprise: Gintoki and Kagura, his fellow Yorozuya member',
         rate:8.32,
-        genre:['Action', 'Adventure','Comedy','Magic','Fantasy']
+        genre:['Action', 'Adventure','Comedy','Magic','Fantasy'],
+        read: [require("../assets/read1.png"),require("../assets/read2.png"),require("../assets/read3.png"),require("../assets/read4.png"),require("../assets/read5.png"),require("../assets/read6.png"),require("../assets/read7.png")],
     },
   ];
   export{data,topData}

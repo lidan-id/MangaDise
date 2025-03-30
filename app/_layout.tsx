@@ -10,6 +10,7 @@ export default function Layout() {
       <Stack.Screen name="Search" options={{ headerShown: false }} />
       <Stack.Screen name="Genre/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="Details/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="Read/[id,ch]" options={{ headerShown: false }} />
     </Stack>
   );
 }

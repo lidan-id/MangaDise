@@ -8,11 +8,30 @@ import {
 } from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
-
-const ChapterCard = ({ chapter, id }: { chapter: number; id: number }) => {
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { format } from "date-fns";
+const ChapterCard = ({
+  id,
+  chapter,
+  comicName,
+  totalCh,
+  publish,
+  price,
+}: {
+  id: string;
+  chapter: number;
+  comicName: string;
+  totalCh: number;
+  publish: Date;
+  price: number;
+}) => {
   const router = useRouter();
   const moveToReadPage = () => {
-    router.push({ pathname: "/Read/[id,ch]", params: { id: id, ch: chapter } });
+    if (price > 0) return;
+    router.push({
+      pathname: "/Read/[id,ch,comicName,totalCh]",
+      params: { id: id, ch: chapter, comicName: comicName, totalCh: totalCh },
+    });
   };
 
   return (
@@ -26,12 +45,19 @@ const ChapterCard = ({ chapter, id }: { chapter: number; id: number }) => {
       >
         <View style={styles.left}>
           <Text style={styles.text1}>Chapter {chapter}</Text>
-          <Text style={styles.text2}>19 June 2022</Text>
+          <Text style={styles.text2}>
+            {format(new Date(publish), "MMMM do, yyyy")}
+          </Text>
         </View>
-        <Image
-          style={styles.image}
-          source={require("../../assets/download.png")}
-        ></Image>
+        {price === 0 ? (
+          <></>
+        ) : (
+          <Ionicons
+            name="lock-closed-outline"
+            color={"white"}
+            size={20}
+          ></Ionicons>
+        )}
       </View>
     </Pressable>
   );

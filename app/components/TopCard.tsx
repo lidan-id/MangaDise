@@ -9,20 +9,20 @@ import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { cyan, primary } from "@/helper/color";
 import CyanButton from "./CyanButton";
-import { TopCardProps } from "@/helper/interface";
+import { Comic, TopCardProps } from "@/helper/interface";
 import { useRouter } from "expo-router";
 
-const TopCard = ({ item }: { item: TopCardProps }) => {
+const TopCard = ({ item, index }: { item: Comic; index: number }) => {
   const router = useRouter();
   const moveToDetailsPage = () => {
     router.push({
       pathname: "/Details/[id]",
-      params: { id: 1 },
+      params: { id: item._id },
     });
   };
   return (
     <View style={styles.container}>
-      <ImageBackground style={styles.image} source={item.image}>
+      <ImageBackground style={styles.image} source={{ uri: item.cover }}>
         <LinearGradient
           locations={[0.6, 1]}
           colors={["transparent", primary]}
@@ -35,7 +35,7 @@ const TopCard = ({ item }: { item: TopCardProps }) => {
       </ImageBackground>
       <View style={styles.top}>
         <Text style={{ color: "white", fontWeight: "bold" }}>
-          Top {item.top}
+          Top {index + 1}
         </Text>
       </View>
       <View style={styles.title}>

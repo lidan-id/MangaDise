@@ -15,27 +15,18 @@ export default function Layout() {
         name="Favorite"
         options={{
           title: "Favorite",
-          // tabBarIcon: ({ color }) => (
-          //   <Ionicons size={28} name="home" color={color} />
-          // ),
         }}
       />
       <Tabs.Screen
         name="Home"
         options={{
           title: "Home",
-          // tabBarIcon: ({ color }) => (
-          //   <Ionicons size={28} name="home" color={color} />
-          // ),
         }}
       />
       <Tabs.Screen
         name="Profile"
         options={{
           title: "Profile",
-          // tabBarIcon: ({ color }) => (
-          //   <Ionicons size={28} name="home" color={color} />
-          // ),
         }}
       />
     </Tabs>

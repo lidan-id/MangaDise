@@ -7,19 +7,19 @@ import {
   Pressable,
 } from "react-native";
 import React from "react";
-import { DataProps } from "@/helper/interface";
+import { Comic } from "@/helper/interface";
 import { useRouter } from "expo-router";
 
-const FavoriteCard = ({ item }: { item: DataProps }) => {
+const FavoriteCard = ({ item }: { item: Comic }) => {
   const router = useRouter();
   const moveToDetails = () => {
-    router.push({ pathname: "/Details/[id]", params: { id: item.id } });
+    // router.push({ pathname: "/Details/[id]", params: { id: item.id } });
   };
   return (
     <Pressable style={{ width: "50%" }} onPress={moveToDetails}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={item.image}></Image>
+          {/* <Image style={styles.image} source={item.image}></Image> */}
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.text}>{item.title}</Text>

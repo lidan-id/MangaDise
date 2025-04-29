@@ -15,6 +15,10 @@ import CyanButton from "./components/CyanButton";
 import { TextInput } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storeData } from "@/asyncStorageServices/async";
+import { useUserStore } from "@/zustand/userStore";
 
 const Login = () => {
   const router = useRouter();
@@ -25,8 +29,36 @@ const Login = () => {
   const moveToRegistration = () => {
     router.replace("./Registration");
   };
+  const changeUser = useUserStore((state) => state.changeUser);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const login = () => {
-    router.replace("./Home");
+    const url =
+      "https://radiant-journey-81333-7ea1ab4922d5.herokuapp.com/user/signin";
+    axios
+      .post(url, { email: email, password: password })
+      .then((response) => {
+        const result = response.data;
+        const { message, status, data } = result;
+        console.log(message);
+        // console.log(data);
+        if (status === "SUCCESS") {
+          storeData(data[0]); // store data to local
+          changeUser({
+            _id: data[0]._id,
+            name: data[0].name,
+            email: data[0].email,
+            phoneNumber: data[0].phoneNumber,
+            point: data[0].point,
+            created_at: data[0].created_at,
+          });
+          router.replace("/Home");
+        }
+      })
+      .catch((error) => {
+        console.log(error.JSON());
+      });
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -54,6 +86,8 @@ const Login = () => {
         <Text style={styles.loginText}>Log-in</Text>
         <Text style={styles.textInputTitle}>User ID / Email</Text>
         <TextInput
+          value={email}
+          onChangeText={(text) => setEmail(text)}
           theme={{ roundness: 8 }}
           cursorColor={primary}
           style={styles.textInput}
@@ -61,6 +95,8 @@ const Login = () => {
         <Text style={styles.textInputTitle}>Password</Text>
         <TextInput
           secureTextEntry={isPasswordSecure}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
           theme={{ roundness: 8 }}
           cursorColor={primary}
           style={styles.textInput}

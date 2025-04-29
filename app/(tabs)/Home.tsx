@@ -8,21 +8,51 @@ import {
   FlatList,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { primary, secondary } from "@/helper/color";
 import SearchBar from "../components/SearchBar";
-import TopCard from "../components/TopCard";
 import Carousel, {
   ICarouselInstance,
   Pagination,
 } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 import RecentCard from "../components/RecentCard";
-import { data, topData } from "@/helper/data";
+import axios from "axios";
 
+import { Comic } from "@/helper/interface";
+import Test from "../Skeleton";
+import TopCard from "../components/TopCard";
 const width = Dimensions.get("window").width;
 const Home = () => {
+  const [comic, setComic] = useState<Comic[]>([]);
+  const [latestComic, setLatestComic] = useState<Comic[]>([]);
+  const [topComic, setTopComic] = useState<Comic[]>([]);
+  useEffect(() => {
+    const url =
+      "https://radiant-journey-81333-7ea1ab4922d5.herokuapp.com/komik/searchKomik";
+    axios
+      .get(url)
+      .then((response) => {
+        const result = response.data;
+        const { status, message, data } = result;
+        setComic(data);
+
+        const sortedLatestComics = [...data].sort((a, b) =>
+          b.create_at.localeCompare(a.create_at)
+        );
+        const sortedTopComics = [...data]
+          .sort((a, b) => a.rate - b.rate)
+          .slice(0, 5);
+        // console.log(sortedLatestComics);
+        setLatestComic(sortedLatestComics);
+        setTopComic(sortedTopComics);
+        // console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const [searchText, setSearchText] = useState("");
@@ -47,8 +77,10 @@ const Home = () => {
           ref={ref}
           width={width}
           height={210}
-          data={topData}
-          renderItem={({ index }) => <TopCard item={topData[index]}></TopCard>}
+          data={topComic}
+          renderItem={({ index }) => (
+            <TopCard item={topComic[index]} index={index}></TopCard>
+          )}
         />
         <View>
           <FlatList
@@ -56,7 +88,7 @@ const Home = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
             ItemSeparatorComponent={() => <View style={{ width: 16 }}></View>}
-            data={data}
+            data={comic}
             renderItem={({ item }) => (
               <View style={{ width: 110, height: 200 }}>
                 <RecentCard
@@ -79,7 +111,7 @@ const Home = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
             ItemSeparatorComponent={() => <View style={{ width: 16 }}></View>}
-            data={data}
+            data={latestComic}
             renderItem={({ item }) => (
               <View style={{ width: 110, height: 200 }}>
                 <RecentCard

@@ -15,6 +15,7 @@ import CyanButton from "./components/CyanButton";
 import { TextInput, RadioButton } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
+import axios from "axios";
 
 const Registration = () => {
   const router = useRouter();
@@ -29,8 +30,33 @@ const Registration = () => {
   const toggleRadio = () => {
     setIsChecked(!isChecked);
   };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const createAccount = () => {
-    router.replace("./Home");
+    const url =
+      "https://radiant-journey-81333-7ea1ab4922d5.herokuapp.com/user/signup";
+    axios
+      .post(url, {
+        name: name,
+        email: email,
+        password: password,
+        phoneNumber: phoneNumber,
+      })
+      .then((response) => {
+        const result = response.data;
+        const { message, status, data } = result;
+        if (message === "User created successfully") {
+          router.replace("/Login");
+        }
+        console.log(message);
+      })
+      .catch((error) => {
+        console.log(error.JSON());
+      });
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -58,18 +84,24 @@ const Registration = () => {
         <Text style={styles.registrationText}>Registration</Text>
         <Text style={styles.textInputTitle}>Name</Text>
         <TextInput
+          value={name}
+          onChangeText={(text) => setName(text)}
           theme={{ roundness: 8 }}
           cursorColor={primary}
           style={styles.textInput}
         ></TextInput>
         <Text style={styles.textInputTitle}>Email</Text>
         <TextInput
+          value={email}
+          onChangeText={(text) => setEmail(text)}
           theme={{ roundness: 8 }}
           cursorColor={primary}
           style={styles.textInput}
         ></TextInput>
         <Text style={styles.textInputTitle}>Password</Text>
         <TextInput
+          value={password}
+          onChangeText={(text) => setPassword(text)}
           secureTextEntry={isPasswordSecure}
           theme={{ roundness: 8 }}
           cursorColor={primary}
@@ -89,6 +121,8 @@ const Registration = () => {
         ></TextInput>
         <Text style={styles.textInputTitle}>Confirm Password</Text>
         <TextInput
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
           secureTextEntry={isPasswordSecure}
           theme={{ roundness: 8 }}
           cursorColor={primary}
@@ -108,6 +142,8 @@ const Registration = () => {
         ></TextInput>
         <Text style={styles.textInputTitle}>Phone Number</Text>
         <TextInput
+          value={phoneNumber}
+          onChangeText={(text) => setPhoneNumber(text)}
           contentStyle={{ paddingLeft: 5 }}
           placeholder="+62"
           placeholderTextColor={"#C1C1C1"}

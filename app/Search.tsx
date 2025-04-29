@@ -6,7 +6,7 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { primary } from "@/helper/color";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchBar from "./components/SearchBar";
@@ -14,7 +14,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import CategoryCard from "./components/CategoryCard";
 import RecentCard from "./components/RecentCard";
-import { data } from "@/helper/data";
+import { Comic } from "@/helper/interface";
+import axios from "axios";
 
 const Search = () => {
   const router = useRouter();
@@ -23,6 +24,22 @@ const Search = () => {
   };
   const [searchText, setSearchText] = useState("");
   let searchCount = 0;
+  const [data, setData] = useState<Comic[]>([]);
+  useEffect(() => {
+    const url =
+      "https://radiant-journey-81333-7ea1ab4922d5.herokuapp.com/komik/searchKomik";
+    axios
+      .get(url)
+      .then((response) => {
+        const result = response.data;
+        const { status, message, data } = result;
+        setData(data);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <SafeAreaView style={{ backgroundColor: primary, height: "100%" }}>
       <SearchBar

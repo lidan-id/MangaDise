@@ -6,13 +6,22 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { DataProps } from "@/helper/interface";
+import { Chapter, DataProps } from "@/helper/interface";
 import { data } from "@/helper/data";
 import { primary, secondary } from "@/helper/color";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import axios from "axios";
+import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
+import Skeleton from "../Skeleton";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");
 
@@ -33,7 +42,8 @@ const ResponsiveImage = ({ imageSource }: any) => {
 
   useEffect(() => {
     if (typeof imageSource === "number") {
-      const { width: imgWidth, height: imgHeight } = Image.resolveAssetSource(imageSource);
+      const { width: imgWidth, height: imgHeight } =
+        Image.resolveAssetSource(imageSource);
       const ratio = imgHeight / imgWidth;
       setImageHeight(width * ratio);
     } else if (typeof imageSource === "string") {
@@ -43,7 +53,7 @@ const ResponsiveImage = ({ imageSource }: any) => {
           const ratio = imgHeight / imgWidth;
           setImageHeight(width * ratio);
         },
-        error => {
+        (error) => {
           console.error(`Error fetching image dimensions: ${error.message}`);
         }
       );
@@ -52,7 +62,7 @@ const ResponsiveImage = ({ imageSource }: any) => {
 
   return (
     <Image
-      source={imageSource}
+      source={{ uri: imageSource }}
       style={[styles.topStartImage, { height: imageHeight }]}
       resizeMode="contain"
     />
@@ -60,33 +70,75 @@ const ResponsiveImage = ({ imageSource }: any) => {
 };
 
 const Read = () => {
+  const opacity = useSharedValue(1); // animation
+  const animatedControlsStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
   const router = useRouter();
-  const { id, ch } = useLocalSearchParams();
-  const [currentData, setCurrentData] = useState<DataProps>();
-
+  const {
+    id,
+    ch,
+    comicName,
+    totalCh,
+  }: { id: string; ch: string; comicName: string; totalCh: string } =
+    useLocalSearchParams();
+  const [linkImages, setLinkImages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [visible, setVisible] = useState(true);
   useEffect(() => {
-    setCurrentData(data.find((item) => item.id === Number(id)));
-  }, [id]);
-
+    setIsLoading(true);
+    console.log("hai");
+    const url = `https://radiant-journey-81333-7ea1ab4922d5.herokuapp.com/chapter/chapter-images?komikName=${comicName}&chapter=Chapter%200${ch}`;
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(url);
+        const result = response.data;
+        setLinkImages(result.images);
+        console.log(result.images);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [ch]);
+  if (isLoading) {
+    return <Skeleton></Skeleton>;
+  }
   const moveToPreviousPage = () => {
     router.back();
   };
 
   const moveToPreviousChapter = () => {
+    if (!visible) return;
     if (Number(ch) > 1) {
       router.push({
-        pathname: "/Read/[id,ch]",
-        params: { id: id, ch: Number(ch) - 1 },
+        pathname: "/Read/[id,ch,comicName,totalCh]",
+        params: {
+          id: id,
+          ch: Number(ch) - 1,
+          comicName: comicName,
+          totalCh: Number(totalCh),
+        },
       });
     }
   };
 
   const moveToNextChapter = () => {
-    if (currentData?.ch === undefined) return;
-    if (Number(ch) < currentData?.ch) {
+    if (!visible) return;
+    if (totalCh === undefined) return;
+    if (Number(ch) < Number(totalCh)) {
       router.push({
-        pathname: "/Read/[id,ch]",
-        params: { id: id, ch: Number(ch) + 1 },
+        pathname: "/Read/[id,ch,comicName,totalCh]",
+        params: {
+          id: id,
+          ch: Number(ch) + 1,
+          comicName: comicName,
+          totalCh: Number(totalCh),
+        },
       });
     }
   };
@@ -95,7 +147,7 @@ const Read = () => {
     <>
       <Stack.Screen
         options={{
-          title: currentData?.title,
+          title: comicName,
           headerTitleStyle: { fontWeight: "bold" },
           headerShown: true,
           headerTintColor: "white",
@@ -124,7 +176,7 @@ const Read = () => {
                   fontSize: 22,
                 }}
               >
-                {currentData?.title} - Chapter {ch}
+                {comicName}- Chapter {ch}
               </Text>
             </View>
           ),
@@ -132,25 +184,49 @@ const Read = () => {
         }}
       ></Stack.Screen>
       <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-          <View>
-            {/* Replace the mapping with your localImages array */}
-            {localImages.map((imgSource, index) => (
-              <View key={index}>
-                <ResponsiveImage imageSource={imgSource} />
-              </View>
-            ))}
-          </View>
-        </ScrollView>
-        <View
-          style={{
-            flexDirection: "row",
-            position: "absolute",
-            bottom: 120,
-            width: "100%",
-            height: 40,
-            justifyContent: "space-around",
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 100 }}
+          onScrollBeginDrag={() => {
+            setVisible(false);
+            opacity.value = withTiming(0, {
+              duration: 500,
+              // easing: Easing.inOut(Easing.ease),
+            });
           }}
+        >
+          <Pressable
+            onPress={() => {
+              setVisible(true);
+
+              opacity.value = withTiming(1, {
+                duration: 500,
+                // easing: Easing.inOut(Easing.ease),
+              });
+            }}
+          >
+            <View>
+              {linkImages.map((imgSource, index) => (
+                <View key={index}>
+                  <ResponsiveImage imageSource={imgSource} />
+                </View>
+              ))}
+            </View>
+          </Pressable>
+        </ScrollView>
+
+        <Animated.View
+          style={[
+            {
+              flexDirection: "row",
+              position: "absolute",
+              bottom: 120,
+              width: "100%",
+              height: 40,
+
+              justifyContent: "space-around",
+            },
+            animatedControlsStyle,
+          ]}
         >
           {ch === "1" ? (
             <View style={{ width: 40, height: 40 }}></View>
@@ -172,10 +248,10 @@ const Read = () => {
                 fontSize: 15,
               }}
             >
-              {ch}/{currentData?.ch}
+              {ch}/{totalCh}
             </Text>
           </View>
-          {Number(ch) === currentData?.ch ? (
+          {Number(ch) === Number(totalCh) ? (
             <View style={{ width: 40, height: 40 }}></View>
           ) : (
             <View style={styles.next}>
@@ -187,7 +263,7 @@ const Read = () => {
               />
             </View>
           )}
-        </View>
+        </Animated.View>
       </SafeAreaView>
     </>
   );

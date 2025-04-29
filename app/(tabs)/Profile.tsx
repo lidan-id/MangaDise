@@ -1,11 +1,20 @@
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
 import React from "react";
 import { primary, secondary } from "@/helper/color";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ProfileCard from "../components/ProfileCard";
+import { deleteUser } from "@/asyncStorageServices/async";
+import { useUserStore } from "@/zustand/userStore";
 
 const Profile = () => {
+  const router = useRouter();
+  const logout = () => {
+    deleteUser();
+    router.replace("/Login");
+  };
+  const userName = useUserStore((state) => state.name);
+  const userPoint = useUserStore((state) => state.point);
   return (
     <SafeAreaView style={styles.container}>
       <Tabs.Screen
@@ -23,7 +32,7 @@ const Profile = () => {
           </View>
           <View>
             <Text style={{ color: "white", fontWeight: "bold", fontSize: 23 }}>
-              Jeffrey Chandra
+              {userName}
             </Text>
             <View style={{ height: 3 }}></View>
             <Text style={{ color: "white", fontSize: 13 }}>Edit profile</Text>
@@ -35,13 +44,25 @@ const Profile = () => {
           size={20}
         ></Ionicons>
       </View>
-      <ProfileCard title="Theme"></ProfileCard>
+      {/* <ProfileCard title="Theme"></ProfileCard>
       <ProfileCard title="Download"></ProfileCard>
       <ProfileCard title="Help Centre"></ProfileCard>
-      <ProfileCard title="Settings"></ProfileCard>
-      <ProfileCard title="About"></ProfileCard>
+      <ProfileCard title="Settings"></ProfileCard> */}
+
+      <View style={[styles.pointContainer, { backgroundColor: primary }]}>
+        <Text style={{ color: "white", fontWeight: "bold" }}>
+          Point : {userPoint}
+        </Text>
+        <Pressable>
+          <View style={styles.pointTopUpContainer}>
+            <Text style={{ fontSize: 11, fontWeight: "bold" }}>TOP UP</Text>
+          </View>
+        </Pressable>
+      </View>
+
       <ProfileCard
         title="Log Out"
+        onpress={logout}
         backgroundColor="#321616"
         icon="log-out-outline"
         textColor="#FF0000"
@@ -76,5 +97,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#5C5C5C",
     marginRight: 20,
+  },
+  pointContainer: {
+    borderBottomWidth: 1,
+    borderColor: "#5C5C5C",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  pointTopUpContainer: {
+    backgroundColor: "gold",
+    padding: 6,
+    borderRadius: 10,
   },
 });

@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { cyan } from "@/helper/color";
 import { useRouter } from "expo-router";
-import { DataProps } from "@/helper/interface";
+import { Comic, DataProps } from "@/helper/interface";
 
 const RecentCard = ({
   item,
@@ -18,7 +18,7 @@ const RecentCard = ({
   authorFontSize,
   padding,
 }: {
-  item: DataProps;
+  item: Comic;
   chFontSize: number;
   titleFontSize: number;
   authorFontSize: number;
@@ -26,7 +26,10 @@ const RecentCard = ({
 }) => {
   const router = useRouter();
   const moveToDetails = () => {
-    router.push({ pathname: "/Details/[id]", params: { id: item.id } });
+    router.push({
+      pathname: "/Details/[id]",
+      params: { id: item._id },
+    });
   };
   return (
     <Pressable onPress={moveToDetails}>
@@ -37,7 +40,9 @@ const RecentCard = ({
         ]}
       >
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={item.image}></Image>
+          <View>
+            <Image style={styles.image} source={{ uri: item.cover }}></Image>
+          </View>
           <View style={styles.ch}>
             <Text
               style={{
@@ -46,7 +51,7 @@ const RecentCard = ({
                 fontSize: chFontSize,
               }}
             >
-              {item.ch} CH
+              {item.totalChapter} CH
             </Text>
           </View>
         </View>
@@ -76,7 +81,7 @@ const RecentCard = ({
 export default RecentCard;
 const styles = StyleSheet.create({
   container: { height: "100%", width: "100%" },
-  imageContainer: { height: "80%" },
+  imageContainer: { height: "80%", backgroundColor: "grey" },
   image: { width: "100%", height: "100%" },
   ch: {
     position: "absolute",
